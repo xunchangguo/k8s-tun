@@ -53,6 +53,7 @@ func Server() *http.Server {
 	// init ip pool
 	ipManager = NewIpManage(tunConfig.CIDR, kubeClient)
 
+	if len(info.SvcCIDR) == 0 {
 	// get service-cluster-ip-range
 	svccidr := GetSvcCIDR(kubeClient)
 	if len(svccidr) == 0 {
@@ -61,7 +62,11 @@ func Server() *http.Server {
 		log.Debugf("service-cidr: %s", svccidr)
 		info.SvcCIDR = svccidr
 	}
+	} else {
+	    log.Debugf("service-cidr: %s", info.SvcCIDR)
+	}
 
+	if len(info.PodCIDR) == 0 {
 	// get cluster-cidr
 	podcidrs := GetPodCIDR(dyClient, kubeClient)
 	if len(podcidrs) == 0 {
@@ -69,6 +74,9 @@ func Server() *http.Server {
 	} else {
 		log.Debugf("pod-cidr: %s", podcidrs)
 		info.PodCIDR = podcidrs
+	}
+	} else {
+	    log.Debugf("pod-cidr: %s", info.PodCIDR)
 	}
 
 	// info server
