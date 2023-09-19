@@ -27,7 +27,8 @@ func ConfigTun(config *config.TunConfig, iface *water.Interface) {
 	}
 	log.Debugf("windows tun interface name:%v", iface.Name())
 	netutil.ExecCmd("netsh", "interface", "ip", "set", "address", iface.Name(), "static", ip.String(), GetMaskStr(ipnet.Mask), "none")
-
+        //TODO 设置DNS为k8s的dns server ip
+	//netutil.ExecCmd("netsh", "interface", "ip", "set", "dns", iface.Name(), "static", "172.31.0.10")
 	for i := 0; i < 10; i++ {
 		if exec.Command("ping", ip.String(), "-n", "1", "-w", "2000").Run() == nil {
 			return
